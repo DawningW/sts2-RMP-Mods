@@ -3,11 +3,11 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $dotnet = "C:\Program Files\dotnet\dotnet.exe"
 $godot = Join-Path $root "libs\Godot_v4.5.1-stable_win64_console.exe"
+$buildRoot = Join-Path $root "build"
 $releaseDir = Join-Path $root "build\RemoveMultiplayerPlayerLimit"
 $dllSource = Join-Path $root ".godot\mono\temp\bin\Debug\RemoveMultiplayerPlayerLimit.dll"
 $pckSource = Join-Path $root "build\RemoveMultiplayerPlayerLimit.pck"
 $manifestPath = Join-Path $root "mod_manifest.json"
-$buildRoot = Join-Path $root "build"
 
 & $dotnet build (Join-Path $root "RemoveMultiplayerPlayerLimit.csproj") -c Debug
 & $godot --headless --path $root --script "res://tools/build_pck.gd"
@@ -15,14 +15,10 @@ $buildRoot = Join-Path $root "build"
 New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
 
 Get-ChildItem -Path $releaseDir -Force | Remove-Item -Recurse -Force
+Get-ChildItem -Path $buildRoot -Filter "sts2-RMP-*.zip" -File -ErrorAction SilentlyContinue | Remove-Item -Force
 
-Copy-Item $manifestPath -Destination (Join-Path $releaseDir "mod_manifest.json") -Force
 Copy-Item $dllSource -Destination (Join-Path $releaseDir "RemoveMultiplayerPlayerLimit.dll") -Force
 Copy-Item $pckSource -Destination (Join-Path $releaseDir "RemoveMultiplayerPlayerLimit.pck") -Force
-
-if (Test-Path (Join-Path $root "mod_image.png")) {
-	Copy-Item (Join-Path $root "mod_image.png") -Destination (Join-Path $releaseDir "mod_image.png") -Force
-}
 
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 $version = [string]$manifest.version

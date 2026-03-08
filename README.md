@@ -22,6 +22,8 @@ This mod elegantly increases the multiplayer lobby limit. By default, it perfect
   <img src="img/shop.png" alt="Screenshot 2" width="800"/>
   <br><br>
   <img src="img/campfire.png" alt="Screenshot 3" width="800"/>
+  <br><br>
+  <img src="img/defect.png" alt="Screenshot 4" width="800"/>
 </div>
 
 <br>
